@@ -1,3 +1,4 @@
+import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -84,10 +85,10 @@ class _MovieDetails extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      movie.title,
-                      style: textStyles.titleLarge,
-                    ),
+                    // Text(
+                    //   movie.title,
+                    //   style: textStyles.titleLarge,
+                    // ),
                     Text(
                       movie.releaseDate.toString(),
                       style: textStyles.bodySmall,
@@ -119,6 +120,7 @@ class _MovieDetails extends StatelessWidget {
             ],
           ),
         ),
+        _ActorsByMovie(movieId: movie.id),
         const SizedBox(height: 40),
       ],
     );
@@ -176,6 +178,57 @@ class _CustomSliveAppBar extends StatelessWidget {
           movie.title,
           style: const TextStyle(color: Colors.white),
         ),
+      ),
+    );
+  }
+}
+
+class _ActorsByMovie extends ConsumerWidget {
+  final int movieId;
+
+  const _ActorsByMovie({required this.movieId});
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final List<Actor>? actors =
+        ref.watch(actorsByMovieProvider)[movieId.toString()];
+
+    if (actors == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return SizedBox(
+      height: 300,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: actors.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      actors[index].profilePath,
+                      width: 150,
+                      height: 200,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Text(actors[index].name),
+                SizedBox(
+                  width: 150,  
+                  child: Text(actors[index].character!,textAlign:TextAlign.center , softWrap: true,),
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

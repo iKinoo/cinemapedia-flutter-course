@@ -155,9 +155,10 @@ class _MoviePoster extends StatelessWidget {
           fit: BoxFit.cover,
           loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress != null) {
-              return const Padding(
-                padding: EdgeInsets.symmetric(vertical: 1),
-                child: Center(child: CircularProgressIndicator(strokeWidth: 1)),
+              return Container(
+                color: Colors.grey.shade300,
+                height: 250,
+                child: const Center(child: CircularProgressIndicator(strokeWidth: 1)),
               );
             }
             return GestureDetector(
