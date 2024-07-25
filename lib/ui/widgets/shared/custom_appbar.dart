@@ -13,6 +13,7 @@ class CustomAppbar extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final colorTheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final searchQuery = ref.watch(searchQueryProvider);
 
     return SafeArea(
       child: Padding(
@@ -27,16 +28,19 @@ class CustomAppbar extends ConsumerWidget {
               const Spacer(),
               IconButton(
                   onPressed: () async {
-
                     final movieRepository = ref.read(movieRepositoryProvider);
 
                     showSearch<Movie?>(
+                      // query: searchQuery,
                       context: context,
-                      delegate: SearchMovieDelegate(searchMovies: movieRepository.searchMovies),
-                    ).then((movie) {
-                      context.push('/movie/${movie?.id}');
-                    },);
-                    
+                      delegate: SearchMovieDelegate(
+                        searchMovies: movieRepository.searchMovies,
+                      ),
+                    ).then(
+                      (movie) {
+                        context.push('/movie/${movie?.id}');
+                      },
+                    );
                   },
                   icon: const Icon(Icons.search))
             ],
