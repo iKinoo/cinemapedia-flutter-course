@@ -6,11 +6,11 @@ import 'package:cinemapedia/ui/views/views.dart';
 final appRouter = GoRouter(
   initialLocation: '/',
   routes: [
-    ShellRoute(
-        builder: (context, state, child) {
-          return HomeScreen(childView: child);
-        },
-        routes: [
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) =>
+          HomeScreen(childView: navigationShell),
+      branches: <StatefulShellBranch>[
+        StatefulShellBranch(routes: [
           GoRoute(
               path: '/',
               builder: (context, state) {
@@ -29,6 +29,8 @@ final appRouter = GoRouter(
                   },
                 ),
               ]),
+        ]),
+        StatefulShellBranch(routes: [
           GoRoute(
             path: '/favorites',
             builder: (context, state) {
@@ -36,6 +38,48 @@ final appRouter = GoRouter(
             },
           )
         ])
+
+        // GoRoute(
+        //     path: '/favorites',
+        //     builder: (context, state) {
+        //       return const FavoritesView();
+        //     },
+        //   )
+      ],
+      // navigatorContainerBuilder: navigatorContainerBuilder,
+    ),
+
+    // ShellRouter con Fernando Herrera
+    // ShellRoute(
+    //     builder: (context, state, child) {
+    //       return HomeScreen(childView: child);
+    //     },
+    //     routes: [
+    //       GoRoute(
+    //           path: '/',
+    //           builder: (context, state) {
+    //             return const HomeView();
+    //           },
+    //           routes: [
+    //             GoRoute(
+    //               path: 'movie/:id',
+    //               name: MovieScreen.name,
+    //               builder: (context, state) {
+    //                 final movideId = state.pathParameters['id'] ?? 'no-id';
+
+    //                 return MovieScreen(
+    //                   movieId: movideId,
+    //                 );
+    //               },
+    //             ),
+    //           ]),
+    //       GoRoute(
+    //         path: '/favorites',
+    //         builder: (context, state) {
+    //           return const FavoritesView();
+    //         },
+    //       )
+    //     ])
 
     // Rutas padre/hija
     // GoRoute(
