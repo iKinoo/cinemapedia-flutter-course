@@ -6,6 +6,18 @@ import 'package:cinemapedia/ui/views/views.dart';
 final appRouter = GoRouter(
   initialLocation: '/',
   routes: [
+    GoRoute(
+      path: '/movie/:id',
+      name: MovieScreen.name,
+      builder: (context, state) {
+        final movideId = state.pathParameters['id'] ?? 'no-id';
+
+        return MovieScreen(
+          movieId: movideId,
+        );
+      },
+    ),
+
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) =>
           HomeScreen(childView: navigationShell),
@@ -15,20 +27,7 @@ final appRouter = GoRouter(
               path: '/',
               builder: (context, state) {
                 return const HomeView();
-              },
-              routes: [
-                GoRoute(
-                  path: 'movie/:id',
-                  name: MovieScreen.name,
-                  builder: (context, state) {
-                    final movideId = state.pathParameters['id'] ?? 'no-id';
-
-                    return MovieScreen(
-                      movieId: movideId,
-                    );
-                  },
-                ),
-              ]),
+              }),
         ]),
         StatefulShellBranch(routes: [
           GoRoute(
