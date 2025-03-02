@@ -140,6 +140,14 @@ class _CustomSliveAppBar extends StatelessWidget {
       backgroundColor: Colors.black,
       expandedHeight: size.height * 0.7,
       foregroundColor: Colors.white,
+      actions: const [
+        IconButton(
+            onPressed: null,
+            icon: Icon(
+              Icons.favorite_outline,
+              color: Colors.white,
+            ))
+      ],
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           children: [
@@ -149,26 +157,17 @@ class _CustomSliveAppBar extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            const SizedBox.expand(
-              child: DecoratedBox(
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [Colors.transparent, Colors.black],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          stops: [0.7, 1]))),
-            ),
-            const SizedBox.expand(
-              child: DecoratedBox(
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [
-                            Colors.transparent,
-                            Color.fromARGB(179, 0, 0, 0)
-                          ],
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          stops: [0.85, 1]))),
+            const _CustomGradient(
+                colors: [Colors.transparent, Colors.black],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: [0.7, 1]),
+            
+            const _CustomGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              stops: [0.85, 1],
+              colors: [Colors.transparent, Color.fromARGB(179, 0, 0, 0)],
             )
           ],
         ),
@@ -179,6 +178,29 @@ class _CustomSliveAppBar extends StatelessWidget {
           style: const TextStyle(color: Colors.white),
         ),
       ),
+    );
+  }
+}
+
+class _CustomGradient extends StatelessWidget {
+  final Alignment begin;
+  final Alignment end;
+  final List<double> stops;
+  final List<Color> colors;
+
+  const _CustomGradient(
+      {required this.begin,
+      required this.end,
+      required this.stops,
+      required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+      child: DecoratedBox(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: colors, begin: begin, end: end, stops: stops))),
     );
   }
 }
