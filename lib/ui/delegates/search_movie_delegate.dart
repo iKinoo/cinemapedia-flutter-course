@@ -34,7 +34,9 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
       const Duration(milliseconds: 500),
       () async {
         final movies = await searchMovies(query);
-        debounceMovies.add(movies);
+        if (!debounceMovies.isClosed) {
+          debounceMovies.add(movies);
+        }
         initialMovies = movies;
         isLoading.add(false);
       },

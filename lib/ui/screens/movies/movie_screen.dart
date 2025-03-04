@@ -1,4 +1,5 @@
 import 'package:cinemapedia/domain/entities/actor.dart';
+import 'package:cinemapedia/ui/providers/storage/local_storage_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -127,25 +128,40 @@ class _MovieDetails extends StatelessWidget {
   }
 }
 
-class _CustomSliveAppBar extends StatelessWidget {
+final isFavoriteProvider = FutureProvider.family.autoDispose((ref, int movieId) {
+  final localStorageRepository = ref.watch(localStorageRepositoryProvider);
+  return localStorageRepository
+      .isMovieFavorite(movieId); // si está en favoritos
+});
+
+class _CustomSliveAppBar extends ConsumerWidget {
   final Movie movie;
 
   const _CustomSliveAppBar({required this.movie});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     final size = MediaQuery.of(context).size;
+    final isFavoriteFuture = ref.watch(isFavoriteProvider(movie.id));
 
     return SliverAppBar(
       backgroundColor: Colors.black,
       expandedHeight: size.height * 0.7,
       foregroundColor: Colors.white,
-      actions: const [
+      actions: [
         IconButton(
-            onPressed: null,
-            icon: Icon(
-              Icons.favorite_outline,
-              color: Colors.white,
+            onPressed: () {
+              ref.watch(localStorageRepositoryProvider).toogleFavorite(movie);
+              ref.invalidate(isFavoriteProvider(movie.id));
+            },
+            icon: isFavoriteFuture.when(
+              data: (isFavorite) => isFavorite
+                  ? const Icon(Icons.favorite_rounded, color: Colors.red,)
+                  : const Icon(Icons.favorite_outline_rounded),
+              error: (_, __) => throw UnimplementedError(),
+              loading: () => const CircularProgressIndicator(
+                strokeWidth: 2,
+              ),
             ))
       ],
       flexibleSpace: FlexibleSpaceBar(
@@ -162,7 +178,6 @@ class _CustomSliveAppBar extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 stops: [0.7, 1]),
-            
             const _CustomGradient(
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
